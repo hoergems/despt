@@ -18,7 +18,7 @@ void OpptPlanner::setProblemEnvironment(ProblemEnvironment *problemEnvironment) 
 }
 
 std::string OpptPlanner::ChooseSolver() { // Specify the solver used in the planner to be DESPOT
-	return "DESPOT";
+	return "POMCP";
 }
 
 despot::DSPOMDP* OpptPlanner::InitializeModel(despot::option::Option* options) {

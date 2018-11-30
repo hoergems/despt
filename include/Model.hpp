@@ -51,6 +51,8 @@ public:
 	virtual void PrintBelief(const despot::Belief& belief,
 	                         std::ostream& out = std::cout) const override;
 
+	virtual despot::POMCPPrior* CreatePOMCPPrior(std::string name = "DEFAULT") const override;
+
 	/* ========================================================================
 	 * Memory management.
 	 * ========================================================================*/

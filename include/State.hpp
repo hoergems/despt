@@ -17,7 +17,7 @@ public:
 
 	RobotStateSharedPtr getOpptState() const;
 
-	void print(std::ostream& out) const;
+	virtual void print(std::ostream& out) const override;
 
 private:
 	RobotStateSharedPtr opptState_ = nullptr;

@@ -39,7 +39,8 @@ add_executable(despott
                ${CMAKE_CURRENT_LIST_DIR}/src/Belief.cpp
                ${CMAKE_CURRENT_LIST_DIR}/src/World.cpp
                ${CMAKE_CURRENT_LIST_DIR}/src/Planner.cpp
-               ${CMAKE_CURRENT_LIST_DIR}/src/Bound.cpp)
+               ${CMAKE_CURRENT_LIST_DIR}/src/Bound.cpp
+               ${CMAKE_CURRENT_LIST_DIR}/src/POMCPPrior.cpp)
                
 target_link_libraries (despott                   
                        ${oppt_LIBRARIES}

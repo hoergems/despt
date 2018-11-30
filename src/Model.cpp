@@ -3,6 +3,7 @@
 #include "include/Belief.hpp"
 #include "include/ObservationMap.hpp"
 #include "include/Bound.hpp"
+#include "include/POMCPPrior.hpp"
 #include "ABTOptions.hpp"
 #include <oppt/problemEnvironment/ProblemEnvironment.hpp>
 #include <oppt/robotHeaders/ActionSpaceDiscretizer.hpp>
@@ -57,8 +58,8 @@ oppt::ProblemEnvironment *DespotModel::getProblemEnvironment() const {
 bool DespotModel::Step(despot::State& state, double random_num, despot::ACT_TYPE action,
                        double& reward, despot::OBS_TYPE& obs) const {
 	stepCounter_++;
- 	auto options = static_cast<const ABTExtendedOptions *>(problemEnvironment_->getOptions());
-	RandomEnginePtr randomEngine(new RandomEngine((unsigned) RAND_MAX * random_num));	
+	auto options = static_cast<const ABTExtendedOptions *>(problemEnvironment_->getOptions());
+	RandomEnginePtr randomEngine(new RandomEngine((unsigned) RAND_MAX * random_num));
 
 	auto robotEnvironment = problemEnvironment_->getRobotPlanningEnvironment();
 	auto robot = problemEnvironment_->getRobotPlanningEnvironment()->getRobot();
@@ -143,11 +144,13 @@ despot::State* DespotModel::CreateStartState(std::string type) const {
 despot::Belief* DespotModel::InitialBelief(const despot::State* start,
         std::string type) const {
 	unsigned int numParticles =
+	    static_cast<const ABTExtendedOptions *>(problemEnvironment_->getOptions())->minParticleCount;
+	unsigned int numScenarios =
 	    static_cast<const ABTExtendedOptions *>(problemEnvironment_->getOptions())->numScenarios;
 	std::vector<despot::State *> particles(numParticles, nullptr);
 	for (size_t i = 0; i != particles.size(); ++i) {
 		RobotStateSharedPtr opptState = problemEnvironment_->getRobotPlanningEnvironment()->sampleInitialState();
-		despot::State *despotState = Allocate(i, 1.0 / numParticles);
+		despot::State *despotState = Allocate(i, 1.0 / numScenarios);
 		static_cast<DespotState *>(despotState)->setOpptState(opptState);
 		particles[i] = despotState;
 	}
@@ -166,7 +169,6 @@ double DespotModel::GetMaxReward() const {
 }
 
 despot::ValuedAction DespotModel::GetBestAction() const {
-	ERROR("INSIDE BEST ACTION");
 	despot::ValuedAction valuedAction;
 	valuedAction.action = 0;
 	valuedAction.value = problemEnvironment_->getRobotPlanningEnvironment()->getRewardPlugin()->getMinMaxReward().first;
@@ -230,13 +232,19 @@ despot::ScenarioLowerBound* DespotModel::CreateScenarioLowerBound(std::string na
 }
 
 despot::ScenarioUpperBound* DespotModel::CreateScenarioUpperBound(std::string name,
-		std::string particle_bound_name) const {
+        std::string particle_bound_name) const {
 	despot::ScenarioUpperBound *upperBound = new ParticleUpperBound(this);
 	return upperBound;
 }
 
 std::vector<ActionSharedPtr> DespotModel::getActions() const {
 	return actions_;
+}
+
+/***************** POMCP Related functions ************************/
+despot::POMCPPrior* DespotModel::CreatePOMCPPrior(std::string name) const {
+	despot::POMCPPrior *prior = new OPPTPOMCPPrior(this);
+	return prior;
 }
 
 

@@ -93,6 +93,8 @@ public:
 
     unsigned int searchDepth = 0;
 
+    FloatType explorationConstant = 0.0;
+
     static std::unique_ptr<options::OptionParser> makeParser(bool simulating) {
         std::unique_ptr<options::OptionParser> parser =
             SharedOptions::makeParser(simulating);
@@ -199,6 +201,10 @@ public:
                 "searchDepth",
                 &ABTExtendedOptions::searchDepth,
                 1);
+        parser->addOptionWithDefault<FloatType>("DESPOT",
+                "explorationConstant",
+                &ABTExtendedOptions::explorationConstant,
+                2.0);
 
     }
 };

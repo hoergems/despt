@@ -3,6 +3,7 @@
 #include "include/Model.hpp"
 #include <oppt/opptCore/core.hpp>
 #include <oppt/problemEnvironment/ProblemEnvironment.hpp>
+#include "ABTOptions.hpp"
 
 using std::cout;
 using std::endl;
@@ -56,6 +57,9 @@ void Belief::Update(despot::ACT_TYPE action, despot::OBS_TYPE obs) {
 	if (!observation)
 		ERROR("No observation");
 
+	auto options = static_cast<const DespotModel *>(model_)->getProblemEnvironment()->getOptions();
+	FloatType numScenarios = (FloatType)(static_cast<const ABTExtendedOptions *>(options)->numScenarios);
+
 	FilterRequestPtr filterRequest = std::make_unique<FilterRequest>();
 
 	for (size_t i = 0; i != particles_.size(); ++i) {
@@ -82,7 +86,7 @@ void Belief::Update(despot::ACT_TYPE action, despot::OBS_TYPE obs) {
 		despot::State *st = static_cast<const DespotModel *>(model_)->Allocate();
 		auto opptState = filterResult->particles[i]->getState();
 		static_cast<DespotState *>(st)->setOpptState(opptState);
-		static_cast<DespotState *>(st)->weight = filterResult->particles[i]->getWeight();
+		static_cast<DespotState *>(st)->weight = (1.0 / numScenarios);//filterResult->particles[i]->getWeight();
 		particles_[i] = st;
 	}
 

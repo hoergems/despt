@@ -29,6 +29,7 @@ despot::State* DespotWorld::GetCurrentState() const {
 bool DespotWorld::ExecuteAction(despot::ACT_TYPE action, despot::OBS_TYPE& obs) {
 	if (!problemEnvironment_)
 		ERROR("No problem environment");
+	cout << "action number: " << action << endl;
 	cout << "execute action: " << *(actions_[action].get()) << endl;
 	auto robotEnvironment = problemEnvironment_->getRobotExecutionEnvironment();
 
