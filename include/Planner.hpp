@@ -25,6 +25,10 @@ public:
 	 */
 	virtual int RunEvaluation(int argc, char* argv[]) override;
 
+	virtual void PlanningLoop(despot::Solver*& solver, despot::World* world, despot::Logger* logger) override;
+
+	virtual bool RunStep(despot::Solver* solver, despot::World* world, despot::Logger* logger) override;
+
 	/**
 	 * Evaluate the planner by repeating a test problem for multiple trials
 	 * Overwrite this function to customize your evaluation pipeline
@@ -38,6 +42,8 @@ public:
 
 private:
 	ProblemEnvironment *problemEnvironment_ = nullptr;
+
+	std::ofstream os_;
 
 };
 

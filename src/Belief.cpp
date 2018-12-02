@@ -1,4 +1,3 @@
-#include "include/Belief.hpp"
 #include "include/State.hpp"
 #include "include/Model.hpp"
 #include <oppt/opptCore/core.hpp>
@@ -20,6 +19,15 @@ Belief::Belief(const despot::DSPOMDP* model, std::vector<despot::State *> partic
 
 despot::Belief* Belief::MakeCopy() const {
 	ERROR("Implement MakeCopy");
+}
+
+VectorRobotStatePtr Belief::getOpptParticles() const {
+	VectorRobotStatePtr opptParticles(particles_.size(), nullptr);
+	for (size_t i = 0; i != opptParticles.size(); ++i) {
+		opptParticles[i] = static_cast<DespotState *>(particles_[i])->getOpptState();
+	}
+
+	return opptParticles;
 }
 
 std::vector<despot::State*> Belief::Sample(int num) const {
@@ -69,7 +77,7 @@ void Belief::Update(despot::ACT_TYPE action, despot::OBS_TYPE obs) {
 	}
 	filterRequest->allowTerminalStates = false;
 	filterRequest->allowZeroWeightParticles = false;
-	filterRequest->numParticles = particles_.size();
+	filterRequest->numParticles = static_cast<const ABTExtendedOptions *>(options)->minParticleCount;
 	filterRequest->robotEnvironment = robotEnvironment_;
 	filterRequest->action = opptAction;
 	filterRequest->observation = observation;
@@ -81,12 +89,13 @@ void Belief::Update(despot::ACT_TYPE action, despot::OBS_TYPE obs) {
 	FilterResultPtr filterResult = particleFilter_->filter(filterRequest);
 	if (filterResult->particles.empty())
 		return;
-	particles_ = std::vector<despot::State *>(filterResult->particles.size(), nullptr);	
+	particles_ = std::vector<despot::State *>(filterResult->particles.size(), nullptr);
 	for (size_t i = 0; i != particles_.size(); ++i) {
 		despot::State *st = static_cast<const DespotModel *>(model_)->Allocate();
 		auto opptState = filterResult->particles[i]->getState();
 		static_cast<DespotState *>(st)->setOpptState(opptState);
-		static_cast<DespotState *>(st)->weight = (1.0 / numScenarios);//filterResult->particles[i]->getWeight();
+		static_cast<DespotState *>(st)->weight = filterResult->particles[i]->getWeight();
+		//static_cast<DespotState *>(st)->weight = (1.0 / numScenarios);//filterResult->particles[i]->getWeight();
 		particles_[i] = st;
 	}
 

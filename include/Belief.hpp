@@ -23,6 +23,8 @@ public:
 
 	void setActions(const std::vector<ActionSharedPtr> &actions);
 
+	VectorRobotStatePtr getOpptParticles() const;
+
 private:
 	std::vector<despot::State*> particles_;
 

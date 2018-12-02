@@ -160,7 +160,12 @@ despot::Belief* DespotModel::InitialBelief(const despot::State* start,
 	static_cast<Belief *>(initBelief)->setObservationMap(observationMap_.get());
 	static_cast<Belief *>(initBelief)->setActions(actions_);
 	static_cast<Belief *>(initBelief)->robotEnvironment_ = problemEnvironment_->getRobotPlanningEnvironment();
+	belief_ = initBelief;
 	return initBelief;
+}
+
+despot::Belief *DespotModel::getBelief() const {
+	return belief_;
 }
 
 double DespotModel::GetMaxReward() const {

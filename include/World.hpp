@@ -22,6 +22,10 @@ public:
 
 	ProblemEnvironment *getProblemEnvironment() const;
 
+	FloatType getImmediateReward() const;
+
+	despot::DSPOMDP *getModel() const;
+
 private:
 	ProblemEnvironment *problemEnvironment_ = nullptr;
 
@@ -30,6 +34,8 @@ private:
 	std::vector<ActionSharedPtr> actions_;
 
 	despot::DSPOMDP *model_ = nullptr;
+
+	FloatType immediateReward_ = 0;
 
 private:
 

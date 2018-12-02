@@ -26,6 +26,10 @@ despot::State* DespotWorld::GetCurrentState() const {
 	return currentDespotState_.get();
 }
 
+FloatType DespotWorld::getImmediateReward() const {
+	return immediateReward_;
+}
+
 bool DespotWorld::ExecuteAction(despot::ACT_TYPE action, despot::OBS_TYPE& obs) {
 	if (!problemEnvironment_)
 		ERROR("No problem environment");
@@ -52,10 +56,14 @@ bool DespotWorld::ExecuteAction(despot::ACT_TYPE action, despot::OBS_TYPE& obs) 
 	auto res = obsMap->emplace(observationResult->observation, obsMap->getMap()->size(), true);
 	obs = res.first->second;
 
+	immediateReward_ = robotEnvironment->getReward(propagationResult);
+	cout << "IMMEDIATE REWARD1: " << immediateReward_ << endl;
+
 	bool terminal = robotEnvironment->isTerminal(propagationResult);
 	if (terminal)
 		WARNING("Terminal state reached");
-	problemEnvironment_->updateViewer(propagationResult->nextState); 
+
+	
 	return terminal;
 }
 
@@ -86,6 +94,10 @@ void DespotWorld::setDiscretizedActions() {
 
 	actions_ = actionSpaceDiscretizer->getAllActionsInOrder(options->numInputStepsActions);
 	LOGGING("ACTIONS SIZE: " + std::to_string(actions_.size()));
+}
+
+despot::DSPOMDP *DespotWorld::getModel() const {
+	return model_;
 }
 
 }

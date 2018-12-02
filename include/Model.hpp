@@ -3,6 +3,7 @@
 #include <despot/interface/pomdp.h>
 #include <oppt/opptCore/core.hpp>
 #include "ObservationMap.hpp"
+#include "include/Belief.hpp"
 
 namespace oppt {
 class ProblemEnvironment;
@@ -104,6 +105,8 @@ public:
 
 	ObservationMap *getObservationMap() const;
 
+	despot::Belief *getBelief() const;
+
 private:
 	ProblemEnvironment *problemEnvironment_ = nullptr;
 
@@ -112,6 +115,8 @@ private:
 	std::vector<ActionSharedPtr> actions_;
 
 	ObservationMapPtr observationMap_ = nullptr;
+
+	mutable despot::Belief *belief_ = nullptr;
 
 	mutable size_t stepCounter_ = 0;
 
