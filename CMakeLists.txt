@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 2.6)
 
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -std=c++11 -pg")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -std=c++11 -pg -w")
 if (NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE RelWithDebInfo) 
 endif()
@@ -35,7 +35,7 @@ message(${oppt_INCLUDE_DIRS})
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(despott
+add_executable(despotSolver
                ${CMAKE_CURRENT_LIST_DIR}/main.cpp
                ${CMAKE_CURRENT_LIST_DIR}/src/Model.cpp
                ${CMAKE_CURRENT_LIST_DIR}/src/State.cpp
@@ -45,7 +45,7 @@ add_executable(despott
                ${CMAKE_CURRENT_LIST_DIR}/src/Bound.cpp
                ${CMAKE_CURRENT_LIST_DIR}/src/POMCPPrior.cpp)
                
-target_link_libraries (despott                   
+target_link_libraries (despotSolver                
                        ${oppt_LIBRARIES}
                        ${DESPOT_LIBRARIES})
 #set_target_properties( despott
