@@ -42,6 +42,7 @@ despot::DSPOMDP* OpptPlanner::InitializeModel(despot::option::Option* options) {
 void OpptPlanner::PlanningLoop(despot::Solver*& solver, despot::World* world, despot::Logger* logger) {
 	FloatType discountFactor = problemEnvironment_->getOptions()->discountFactor;
 	FloatType totalReward = 0.0;
+	FloatType immediateReward = 0.0;
 	for (int i = 0; i < despot::Globals::config.sim_len; i++) {
 		bool terminal = RunStep(solver, world, logger);
 		FloatType immediateReward = static_cast<DespotWorld*>(world)->getImmediateReward();
@@ -50,15 +51,22 @@ void OpptPlanner::PlanningLoop(despot::Solver*& solver, despot::World* world, de
 		os_ << "DISCOUNTED_REWARD: " << std::pow(discountFactor, i) * immediateReward << endl;
 		totalReward += std::pow(discountFactor, i) * immediateReward;
 		if (terminal) {
-			os_ << "Total discounted reward: " << totalReward << endl;
-			if (immediateReward == problemEnvironment_->getRobotExecutionEnvironment()->getRewardPlugin()->getMinMaxReward().second) {
-				os_ << "Run successful: True\n";
-			} else {
-				os_ << "Run successful: False\n";
-			}
 			//if (immediateReward == problemEnvironment_->getRobotExecutionEnvironment()->getRewardPlugin())
 			break;
 		}
+
+		if (i >= problemEnvironment_->getOptions()->nSimulationSteps) {
+			LOGGING("OUT OF STEPS");
+			break;
+		}
+
+	}
+
+	os_ << "Total discounted reward: " << totalReward << endl;
+	if (immediateReward == problemEnvironment_->getRobotExecutionEnvironment()->getRewardPlugin()->getMinMaxReward().second) {
+		os_ << "Run successful: True\n";
+	} else {
+		os_ << "Run successful: False\n";
 	}
 }
 
