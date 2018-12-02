@@ -31,7 +31,10 @@ include_directories(${DESPOT_INCLUDE_DIRS})
 link_directories(${DESPOT_LIBRARY_DIRS})
 list(APPEND oppt_LIBRARY_DIRS "${ASSIMP_LIBRARY_DIRS}")
 
+message("====================================")
 message(${oppt_INCLUDE_DIRS})
+message(${oppt_LIBRARIES})
+message("====================================")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
