@@ -11,6 +11,9 @@ if (CMAKE_BUILD_TYPE MATCHES RELWITHDEBINFO OR CMAKE_BUILD_TYPE MATCHES DEBUG)
    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -pg")
 endif()
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
+
+
 include(FindPkgConfig)
 include(GNUInstallDirs)
 
@@ -45,3 +48,7 @@ add_executable(despott
 target_link_libraries (despott                   
                        ${oppt_LIBRARIES}
                        ${DESPOT_LIBRARIES})
+#set_target_properties( despott
+#    PROPERTIES    
+#    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+#)
