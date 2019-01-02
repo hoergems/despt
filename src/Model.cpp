@@ -114,7 +114,7 @@ bool DespotModel::Step(despot::State& state, despot::ACT_TYPE action, double& re
 	    robot->makeObservationReport(observationRequest);
 
 	auto res = observationMap_->emplace(observationResult->observation, observationMap_->getMap()->size());
-	obs = res.first->second;
+	obs = res.first->second;	
 
 	// Get the reward
 	reward = robotEnvironment->getReward(propagationResult);

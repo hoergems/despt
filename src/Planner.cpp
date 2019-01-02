@@ -46,11 +46,13 @@ void OpptPlanner::PlanningLoop(despot::Solver*& solver, despot::World* world, de
 	for (int i = 0; i < despot::Globals::config.sim_len; i++) {
 		bool terminal = RunStep(solver, world, logger);
 		FloatType immediateReward = static_cast<DespotWorld*>(world)->getImmediateReward();
+		os_ << "t = " << i << endl;
 		os_ << "IMMEDIATE_REWARD: " << immediateReward << endl;
 		os_ << "DISCOUNT_FACTOR: " << std::pow(discountFactor, i) << endl;
 		os_ << "DISCOUNTED_REWARD: " << std::pow(discountFactor, i) * immediateReward << endl;
 		WARNING("terminal: " + std::to_string(terminal));
 		totalReward += std::pow(discountFactor, i) * immediateReward;
+		cout << "total discounted reward: " << totalReward << endl;
 		if (terminal) {
 			//if (immediateReward == problemEnvironment_->getRobotExecutionEnvironment()->getRewardPlugin())
 			break;

@@ -37,7 +37,7 @@ typedef std::unique_ptr<ObservationIntMap> ObservationIntMapPtr;
 class ObservationMap {
 public:
 	ObservationMap(const FloatType &maxObservationDistance):
-		map_(0, Hasher(), [ & maxObservationDistance](const ObservationSharedPtr & o1, const ObservationSharedPtr & o2) {
+		map_(0, Hasher(), [ & maxObservationDistance](const ObservationSharedPtr & o1, const ObservationSharedPtr & o2) {			
 		if (o1->distanceTo(*(o2.get())) <= maxObservationDistance)
 			return true;
 		return false;
