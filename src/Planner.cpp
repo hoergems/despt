@@ -49,6 +49,7 @@ void OpptPlanner::PlanningLoop(despot::Solver*& solver, despot::World* world, de
 		os_ << "IMMEDIATE_REWARD: " << immediateReward << endl;
 		os_ << "DISCOUNT_FACTOR: " << std::pow(discountFactor, i) << endl;
 		os_ << "DISCOUNTED_REWARD: " << std::pow(discountFactor, i) * immediateReward << endl;
+		WARNING("terminal: " + std::to_string(terminal));
 		totalReward += std::pow(discountFactor, i) * immediateReward;
 		if (terminal) {
 			//if (immediateReward == problemEnvironment_->getRobotExecutionEnvironment()->getRewardPlugin())
@@ -121,6 +122,7 @@ void OpptPlanner::InitializeDefaultParameters()  { // Specify DESPOT parameters 
 	despot::Globals::config.num_scenarios = options->numScenarios;
 	despot::Globals::config.search_depth = options->searchDepth;
 	despot::Globals::config.discount = options->discountFactor;
+	despot::Globals::config.sim_len = options->nSimulationSteps;
 }
 
 /**
