@@ -127,6 +127,7 @@ int DespotModel::NumActions() const {
 
 double DespotModel::Reward(const despot::State& state, despot::ACT_TYPE action) const {
 	PropagationResultSharedPtr propRes(new PropagationResult);
+	propRes->previousState = static_cast<const DespotState &>(state).getPreviousState();
 	propRes->nextState = static_cast<const DespotState &>(state).getOpptState();
 	propRes->action = actions_[action].get();
 	return problemEnvironment_->getRobotPlanningEnvironment()->getReward(propRes);

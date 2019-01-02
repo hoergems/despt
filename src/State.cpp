@@ -27,6 +27,16 @@ RobotStateSharedPtr DespotState::getOpptState() const {
 	return opptState_;
 }
 
+void DespotState::setPreviousState(RobotStateSharedPtr previousState) {
+	previousState_ = previousState;
+}
+
+RobotState *DespotState::getPreviousState() const {
+	if (previousState_)
+		return previousState_.get();
+	return nullptr;
+}
+
 void DespotState::print(std::ostream& out) const {
 	if (!opptState_)
 		ERROR("OpptState is null");

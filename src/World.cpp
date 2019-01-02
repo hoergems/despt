@@ -44,6 +44,7 @@ bool DespotWorld::ExecuteAction(despot::ACT_TYPE action, despot::OBS_TYPE& obs) 
 	PropagationResultSharedPtr propagationResult = robotEnvironment->getRobot()->propagateState(propagationRequest);
 
 	static_cast<DespotState *>(currentDespotState_.get())->setOpptState(propagationResult->nextState);
+	static_cast<DespotState *>(currentDespotState_.get())->setPreviousState(propagationRequest->currentState);
 
 	ObservationRequestSharedPtr observationRequest(new ObservationRequest);
 	observationRequest->currentState = propagationResult->nextState;

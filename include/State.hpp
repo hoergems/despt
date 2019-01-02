@@ -19,8 +19,14 @@ public:
 
 	virtual void print(std::ostream& out) const override;
 
+	void setPreviousState(RobotStateSharedPtr previousState);
+
+	RobotState *getPreviousState() const;
+
 private:
 	RobotStateSharedPtr opptState_ = nullptr;
+
+	RobotStateSharedPtr previousState_ = nullptr;
 
 };
 
