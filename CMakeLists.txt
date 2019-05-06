@@ -20,6 +20,7 @@ include(GNUInstallDirs)
 
 find_package(SDFormat REQUIRED)
 find_package(oppt REQUIRED)
+include_directories(${oppt_INCLUDE_DIRS})
 
 if(PKG_CONFIG_FOUND)
     pkg_check_modules(DESPOT despot)

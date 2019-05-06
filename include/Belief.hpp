@@ -28,7 +28,7 @@ public:
 private:
 	std::vector<despot::State*> particles_;
 
-	const RobotEnvironment *robotEnvironment_ = nullptr;
+	RobotEnvironment *robotEnvironment_ = nullptr;
 
 	ObservationMap *observationMap_ = nullptr;
 
