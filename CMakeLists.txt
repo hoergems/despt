@@ -20,7 +20,10 @@ include(GNUInstallDirs)
 
 find_package(SDFormat REQUIRED)
 find_package(oppt REQUIRED)
+find_package(kdl_parser REQUIRED)
 include_directories(${oppt_INCLUDE_DIRS})
+link_directories(${oppt_LIBRARY_DIRS})
+
 
 if(PKG_CONFIG_FOUND)
     pkg_check_modules(DESPOT despot)
@@ -30,10 +33,10 @@ if(PKG_CONFIG_FOUND)
 endif()
 include_directories(${DESPOT_INCLUDE_DIRS})
 link_directories(${DESPOT_LIBRARY_DIRS})
+link_directories(${kdl_parser_LIBRARY_DIRS})
 list(APPEND oppt_LIBRARY_DIRS "${ASSIMP_LIBRARY_DIRS}")
 
 message("====================================")
-message(${oppt_INCLUDE_DIRS})
 message(${oppt_LIBRARIES})
 message("====================================")
 
@@ -51,7 +54,8 @@ add_executable(despotSolver
                
 target_link_libraries (despotSolver                
                        ${oppt_LIBRARIES}
-                       ${DESPOT_LIBRARIES})
+                       ${DESPOT_LIBRARIES}
+                       ${kdl_parser_LIBRARIES})
 #set_target_properties( despott
 #    PROPERTIES    
 #    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
