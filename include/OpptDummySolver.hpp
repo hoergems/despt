@@ -1,18 +1,20 @@
 #ifndef _OPPT_DUMMY_SOLVER_HPP_
 #define _OPPT_DUMMY_SOLVER_HPP_
 #include <oppt/solver/solver.hpp>
+#include "ABTOptions.hpp"
+#include <oppt/gazeboInterface/GazeboInterface.hpp>
 
 using namespace oppt;
 namespace solvers {
 
 class OpptDummySolver: public Solver {
 public:
-	OpptDummySolver():
-		Solver() {
+    OpptDummySolver():
+        Solver() {
 
-	}
+    }
 
-	/**
+    /**
      * Virtual destructor
      */
     virtual ~OpptDummySolver() {}
@@ -21,14 +23,19 @@ public:
      * @brief Performs initial setup operations
      */
     virtual void setup() override {
-
+        auto options = static_cast<ABTExtendedOptions*>(problemEnvironmentOptions_);
+        FloatType stepSize = options->planningSimulationStepSize;
+        if (stepSize > 0.0) {
+            cout << "STEP SIZE: " << stepSize << endl;
+            robotPlanningEnvironment_->getGazeboInterface()->setMaxStepSize(stepSize);
+        }
     }
 
     /**
      * @brief Perform reset operations. This method is called after each simulation run
      */
     virtual bool reset() override {
-    	return true;
+        return true;
 
     }
 
@@ -39,7 +46,7 @@ public:
      * @return true if the policy improvement was successful
      */
     virtual bool improvePolicy(const FloatType &timeout) override {
-    	return true;
+        return true;
     }
 
     /**
@@ -50,7 +57,7 @@ public:
      * If there's no action available, a nullptr should be returned
      */
     virtual ActionSharedPtr getNextAction() override {
-    	return nullptr;
+        return nullptr;
     }
 
     /**
@@ -64,12 +71,12 @@ public:
     virtual bool updateBelief(const ActionSharedPtr& action,
                               const ObservationSharedPtr& observation,
                               const bool &allowTerminalStates = false) override {
-    	return true;
+        return true;
     }
 
     oppt::HeuristicPlugin *getHeuristicPlugin() const {
-    	return heuristicPlugin_.get();
-    }   
+        return heuristicPlugin_.get();
+    }
 
 };
 

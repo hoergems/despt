@@ -36,6 +36,8 @@ despot::DSPOMDP* OpptPlanner::InitializeModel(despot::option::Option* options) {
 		                    std::ios_base::app | std::ios_base::out);
 	}
 
+	static_cast<const ABTExtendedOptions *>(problemEnvironment_->getOptions())->planningSimulationStepSize;
+
 	return despotModel;
 }
 
