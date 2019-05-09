@@ -89,6 +89,11 @@ void Belief::Update(despot::ACT_TYPE action, despot::OBS_TYPE obs) {
 	FilterResultPtr filterResult = particleFilter_->filter(filterRequest);
 	if (filterResult->particles.empty())
 		return;
+
+	for (auto &particle: particles_) {
+		static_cast<const DespotModel *>(model_)->Free(particle);
+	}
+
 	particles_ = std::vector<despot::State *>(filterResult->particles.size(), nullptr);
 	for (size_t i = 0; i != particles_.size(); ++i) {
 		despot::State *st = static_cast<const DespotModel *>(model_)->Allocate();
@@ -98,6 +103,8 @@ void Belief::Update(despot::ACT_TYPE action, despot::OBS_TYPE obs) {
 		//static_cast<DespotState *>(st)->weight = (1.0 / numScenarios);//filterResult->particles[i]->getWeight();
 		particles_[i] = st;
 	}
+
+	static_cast<const DespotModel *>(model_)->cleanup();
 
 }
 

@@ -114,7 +114,7 @@ bool DespotModel::Step(despot::State& state, despot::ACT_TYPE action, double& re
 	    robot->makeObservationReport(observationRequest);
 
 	auto res = observationMap_->emplace(observationResult->observation, observationMap_->getMap()->size());
-	obs = res.first->second;	
+	obs = res.first->second;
 
 	// Get the reward
 	reward = robotEnvironment->getReward(propagationResult);
@@ -204,30 +204,44 @@ void DespotModel::PrintBelief(const despot::Belief& belief,
 
 
 despot::State* DespotModel::Allocate(int state_id, double weight) const {
-	DespotState* state = memoryPool_.Allocate();
-	state->state_id = state_id;
-	state->weight = weight;
-	return state;
+	std::unique_ptr<despot::State> allocState(new DespotState);
+	despot::State *statePtr = allocState.get();
+	memory_[statePtr] = std::move(allocState);
+	statePtr->state_id = state_id;
+	statePtr->weight = weight;
+	allocated_++;
+	return statePtr;
 }
 
 
-despot::State* DespotModel::Copy(const despot::State* state) const {
-	DespotState* copied = memoryPool_.Allocate();
-	*copied = *static_cast<const DespotState*>(state);
-
-	copied->SetAllocated();
+despot::State* DespotModel::Copy(const despot::State* state) const {	
+	despot::State *copied = Allocate(state->state_id, state->weight);
+	auto opptState = static_cast<const DespotState *>(state)->getOpptState();
+	VectorFloat stateVec = opptState->as<VectorState>()->asVector();
+	RobotStateSharedPtr copiedOpptState(new VectorState(stateVec));
+	copiedOpptState->setGazeboWorldState(opptState->getGazeboWorldState());
+	copiedOpptState->setUserData(opptState->getUserData());
+	static_cast<DespotState *>(copied)->setOpptState(copiedOpptState);
 	return copied;
 }
 
 
 void DespotModel::Free(despot::State* state) const {
-	memoryPool_.Free(static_cast<DespotState*>(state));
+	statesToClean_.push_back(state);	
 }
 
 
 int DespotModel::NumActiveParticles() const {
-	int numAllocated = memoryPool_.num_allocated();
-	return numAllocated;
+	return memory_.size();	
+}
+
+void DespotModel::cleanup() const {
+	for (auto &state : statesToClean_) {
+		if (memory_.find(state) != memory_.end())
+			memory_.erase(state);
+	}
+
+	statesToClean_.clear();	
 }
 
 despot::ScenarioLowerBound* DespotModel::CreateScenarioLowerBound(std::string name,

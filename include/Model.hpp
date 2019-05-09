@@ -107,6 +107,8 @@ public:
 
 	despot::Belief *getBelief() const;
 
+	void cleanup() const;
+
 private:
 	ProblemEnvironment *problemEnvironment_ = nullptr;
 
@@ -118,7 +120,11 @@ private:
 
 	mutable despot::Belief *belief_ = nullptr;
 
-	mutable size_t stepCounter_ = 0;
+	mutable size_t stepCounter_ = 0;	
+
+	mutable std::unordered_map<despot::State *, std::unique_ptr<despot::State>> memory_;
+
+	mutable std::vector<despot::State*> statesToClean_;
 
 private:
 	void setDiscretizedActions();
