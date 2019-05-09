@@ -208,8 +208,7 @@ despot::State* DespotModel::Allocate(int state_id, double weight) const {
 	despot::State *statePtr = allocState.get();
 	memory_[statePtr] = std::move(allocState);
 	statePtr->state_id = state_id;
-	statePtr->weight = weight;
-	allocated_++;
+	statePtr->weight = weight;	
 	return statePtr;
 }
 
